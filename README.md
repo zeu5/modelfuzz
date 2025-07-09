@@ -41,3 +41,7 @@ fmt.Printf("Total states covered : %d\n", coverage.UniqueStates)
 
 ...
 ```
+
+## Coverage server
+
+The fuzzer will interact with a TLC server that will simulate the trace and return the state information. [burcuku/tlc-controlled](https://github.com/burcuku/tlc-controlled) contains the augmented TLC server that is capable to spinning up a server that the fuzzer can communicate with.

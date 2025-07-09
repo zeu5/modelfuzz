@@ -47,6 +47,8 @@ type TLCStateGuider struct {
 
 var _ Guider = &TLCStateGuider{}
 
+// NewTLCStateGuider creates a new instance of TLCStateGuider.
+// It initializes the guider with the given TLC address and optional record path for traces.
 func NewTLCStateGuider(tlcAddr, recordPath string, recordTraces bool) *TLCStateGuider {
 	if recordPath != "" {
 		if _, err := os.Stat(recordPath); err == nil {
@@ -67,6 +69,8 @@ func NewTLCStateGuider(tlcAddr, recordPath string, recordTraces bool) *TLCStateG
 	}
 }
 
+// Reset resets the state of the TLCStateGuider.
+// It clears the maps that track states, traces, and state traces.
 func (t *TLCStateGuider) Reset(key string) {
 	t.lock.Lock()
 	t.statesMap = make(map[int64]bool)
@@ -75,6 +79,9 @@ func (t *TLCStateGuider) Reset(key string) {
 	t.lock.Unlock()
 }
 
+// Coverage returns the coverage statistics of the TLCStateGuider.
+// It returns the number of unique states encountered so far.
+// This method is thread-safe and uses a mutex to lock access to the statesMap.
 func (t *TLCStateGuider) Coverage() CoverageStats {
 	t.lock.Lock()
 	defer t.lock.Unlock()
@@ -83,6 +90,8 @@ func (t *TLCStateGuider) Coverage() CoverageStats {
 	}
 }
 
+// Check takes a trace and an event trace, checks them against the TLC server,
+// and returns the number of new states found and the coverage ratio.
 func (t *TLCStateGuider) Check(trace *List[*Choice], eventTrace *List[*Event]) (int, float64) {
 	bs, _ := json.Marshal(trace)
 	sum := sha256.Sum256(bs)
